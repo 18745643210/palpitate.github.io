@@ -4,16 +4,17 @@
 
 <head>
     <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
-    <meta name="keywords" content="leetcode题解3:无重复字符的最长子串, Palpitate">
-    <meta name="description" content="题目描述给定一个字符串 s ，请你找出其中不含有重复字符的 最长子串 的长度。
-输入s &amp;#x3D; &amp;quot;abcabcbb&amp;quot;
+    <meta name="keywords" content="leetcode题解5:最长回文串, Palpitate">
+    <meta name="description" content="题目描述给你一个字符串 s，找到 s 中最长的回文子串。
+输入s &amp;#x3D; &amp;quot;babad&amp;quot;
 
 
 
-输出3
+输出&amp;quot;bab&amp;quot;
 
-因为无重复字符的最长子串是 “abc”，所以其长度为 3。
-思路考察了滑动窗口机">
+
+
+思路本题基于动态规划解答，时间复杂度o(n2),状态转移方程：P(i,j)&amp;">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="renderer" content="webkit|ie-stand|ie-comp">
@@ -27,7 +28,7 @@
 
     
 
-    <title>leetcode题解3:无重复字符的最长子串 | Palpitate</title>
+    <title>leetcode题解5:最长回文串 | Palpitate</title>
     <link rel="icon" type="image/png" href="/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.min.css">
@@ -317,12 +318,12 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/11.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/5.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">leetcode题解3:无重复字符的最长子串</h1>
+                    <h1 class="description center-align post-title">leetcode题解5:最长回文串</h1>
                 </div>
             </div>
         </div>
@@ -454,7 +455,7 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2022-06-05
+                    2022-06-06
                 </div>
                 
 
@@ -478,40 +479,66 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h2 id="题目描述"><a href="#题目描述" class="headerlink" title="题目描述"></a>题目描述</h2><p>给定一个字符串 s ，请你找出其中不含有重复字符的 最长子串 的长度。</p>
-<h2 id="输入"><a href="#输入" class="headerlink" title="输入"></a>输入</h2><pre class="language-Java" data-language="Java"><code class="language-Java">s &#x3D; &quot;abcabcbb&quot;</code></pre>
+                <h2 id="题目描述"><a href="#题目描述" class="headerlink" title="题目描述"></a>题目描述</h2><p>给你一个字符串 s，找到 s 中最长的回文子串。</p>
+<h2 id="输入"><a href="#输入" class="headerlink" title="输入"></a>输入</h2><pre class="language-Java" data-language="Java"><code class="language-Java">s &#x3D; &quot;babad&quot;</code></pre>
 
 
 
-<h2 id="输出"><a href="#输出" class="headerlink" title="输出"></a>输出</h2><pre class="language-Java" data-language="Java"><code class="language-Java">3</code></pre>
+<h2 id="输出"><a href="#输出" class="headerlink" title="输出"></a>输出</h2><pre class="language-Java" data-language="Java"><code class="language-Java">&quot;bab&quot;</code></pre>
 
-<p>因为无重复字符的最长子串是 “abc”，所以其长度为 3。</p>
-<h2 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h2><p>考察了滑动窗口机制，用散列表存储字符和字符下标。</p>
-<h2 id="解题代码："><a href="#解题代码：" class="headerlink" title="解题代码："></a>解题代码：</h2><pre class="language-Java" data-language="Java"><code class="language-Java">public static int lengthOfLongestSubstring(String s) &#123;
-        if (s &#x3D;&#x3D; null || s.length() &#x3D;&#x3D; 0) &#123;
-            return 0;
+
+
+<h2 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h2><p>本题基于动态规划解答，时间复杂度o(n2),状态转移方程：P(i,j)&#x3D;P(i+1,j−1)∧(Si&#x3D;&#x3D;Sj),重点就是如果当前子串是回文串，他的左元素如果等于右元素，那么包括左右元素的串也是回文串。</p>
+<h2 id="解题代码："><a href="#解题代码：" class="headerlink" title="解题代码："></a>解题代码：</h2><pre class="language-Java" data-language="Java"><code class="language-Java">public static String longestPalindrome(String s) &#123;
+        int len &#x3D; s.length();
+
+        if (len &lt; 2) &#123;
+            return s;
         &#125;
-        &#x2F;&#x2F; 存储字符和下标
-        Map&lt;Character, Integer&gt; map &#x3D; new HashMap&lt;&gt;();
 
-        &#x2F;&#x2F; 定义左区间
-        int left &#x3D; 0;
-        &#x2F;&#x2F; 定义最大长度
-        int max &#x3D; 0;
+        int max &#x3D; 1;
+        int beginIndex &#x3D; 0;
+        &#x2F;&#x2F; dp[i][j] 表示 s[i..j] 是否是回文串
+        boolean[][] dp &#x3D; new boolean[len][len];
 
-        for (int i &#x3D; 0; i &lt; s.length(); i++) &#123;
-            &#x2F;&#x2F; 如果已经出现当前字符
-            if (map.containsKey(s.charAt(i))) &#123;
-                &#x2F;&#x2F; 重新设置左区间（当前左区间和当前重复字符下标的next）
-                left &#x3D; Math.max(left, map.get(s.charAt(i))+1);
+        &#x2F;&#x2F; 初始化赋值
+        for (int i &#x3D; 0; i &lt; len; i++) &#123;
+            dp[i][i] &#x3D; true;
+        &#125;
+
+        &#x2F;&#x2F; 从长度为2开始递增遍历
+        for (int Len &#x3D; 2; Len &lt;&#x3D; s.length(); Len++) &#123;
+            &#x2F;&#x2F; 子串左边界，左边界的上限设置可以宽松一些
+            for (int i &#x3D; 0; i &lt; len; i++) &#123;
+                &#x2F;&#x2F; 子串右边界
+                int j &#x3D; i + Len - 1;
+
+                &#x2F;&#x2F; 右边界越界，跳出循环
+                if (j &gt; s.length() - 1) &#123;
+                    break;
+                &#125;
+
+                if (s.charAt(i) !&#x3D; s.charAt(j)) &#123;
+                    dp[i][j] &#x3D; false;
+                &#125; else &#123;
+                    &#x2F;&#x2F; 中间一个字符的情况
+                    if (j - i &lt; 3) &#123;
+                        dp[i][j] &#x3D; true;
+                        &#x2F;&#x2F; 状态转移方程
+                    &#125; else &#123;
+                        dp[i][j] &#x3D; dp[i + 1][j - 1];
+                    &#125;
+                &#125;
+
+                &#x2F;&#x2F; 只要 dp[i][L] &#x3D;&#x3D; true 成立，就表示子串 s[i..L] 是回文，此时记录回文长度和起始位置
+                if (dp[i][j] &amp;&amp; j - i + 1 &gt; max) &#123;
+                    max &#x3D; j - i + 1;
+                    beginIndex &#x3D; i;
+                &#125;
             &#125;
-            map.put(s.charAt(i), i);
-
-            &#x2F;&#x2F; 重新设置最大长度(当前最大长度和当前右区间减去左区间)
-            max &#x3D; Math.max(max, map.get(s.charAt(i)) - left + 1);
         &#125;
 
-        return max;
+        return s.substring(beginIndex, beginIndex + max);
     &#125;</code></pre>
                 
             </div>
@@ -538,7 +565,7 @@
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="https://palpitate97.github.io/2022/06/05/leetcode%E9%A2%98%E8%A7%A33:%E6%97%A0%E9%87%8D%E5%A4%8D%E5%AD%97%E7%AC%A6%E7%9A%84%E6%9C%80%E9%95%BF%E5%AD%90%E4%B8%B2/">https://palpitate97.github.io/2022/06/05/leetcode%E9%A2%98%E8%A7%A33:%E6%97%A0%E9%87%8D%E5%A4%8D%E5%AD%97%E7%AC%A6%E7%9A%84%E6%9C%80%E9%95%BF%E5%AD%90%E4%B8%B2/</a>
+                    <a href="https://palpitate97.github.io/2022/06/06/leetcode%E9%A2%98%E8%A7%A35:%E6%9C%80%E9%95%BF%E5%9B%9E%E6%96%87%E4%B8%B2/">https://palpitate97.github.io/2022/06/06/leetcode%E9%A2%98%E8%A7%A35:%E6%9C%80%E9%95%BF%E5%9B%9E%E6%96%87%E4%B8%B2/</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -751,9 +778,10 @@
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
+                <i class="far fa-dot-circle"></i>&nbsp;本篇
+            </div>
             <div class="card">
                 <a href="/2022/06/06/leetcode%E9%A2%98%E8%A7%A35:%E6%9C%80%E9%95%BF%E5%9B%9E%E6%96%87%E4%B8%B2/">
                     <div class="card-image">
@@ -771,9 +799,9 @@
                         
                     </div>
                     <div class="publish-info">
-                        <span class="publish-date">
-                            <i class="far fa-clock fa-fw icon-date"></i>2022-06-06
-                        </span>
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2022-06-06
+                            </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-user fa-fw"></i>
@@ -782,6 +810,7 @@
                         </span>
                     </div>
                 </div>
+
                 
                 <div class="card-action article-tags">
                     
@@ -800,13 +829,13 @@
                 下一篇&nbsp;<i class="fas fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/2022/06/04/leetcode%E9%A2%98%E8%A7%A32:%E4%B8%A4%E6%95%B0%E7%9B%B8%E5%8A%A0/">
+                <a href="/2022/06/05/leetcode%E9%A2%98%E8%A7%A33:%E6%97%A0%E9%87%8D%E5%A4%8D%E5%AD%97%E7%AC%A6%E7%9A%84%E6%9C%80%E9%95%BF%E5%AD%90%E4%B8%B2/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/12.jpg" class="responsive-img" alt="leetcode题解2:两数相加">
+                        <img src="/medias/featureimages/11.jpg" class="responsive-img" alt="leetcode题解3:无重复字符的最长子串">
                         
-                        <span class="card-title">leetcode题解2:两数相加</span>
+                        <span class="card-title">leetcode题解3:无重复字符的最长子串</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -817,7 +846,7 @@
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2022-06-04
+                                <i class="far fa-clock fa-fw icon-date"></i>2022-06-05
                             </span>
                         <span class="publish-author">
                             
